@@ -1,6 +1,6 @@
 /*
  * ExtractWords.xs
- * Last Modification: Thu May  8 10:50:56 WEST 2003
+ * Last Modification: Fri May 23 11:41:20 WEST 2003
  *
  * Copyright (c) 2003 Henrique Dias <hdias@aesbuc.pt>. All rights reserved.
  * This module is free software; you can redistribute it and/or modify
@@ -50,7 +50,8 @@ void unescape_str(unsigned char *s) {
 				isxdigit(s[y+4]) &&
 				isxdigit(s[y+5]) &&
 				isxdigit(s[y+6]) &&
-				!isalnum(s[y+7]))) ||
+				!isalnum(s[y+7]) &&
+				(y == 0 || !isalnum(s[y-1])))) ||
 				((s[x] = s[y]) == '$' && !(isDIGIT(s[y+1]) || (y > 0 && isDIGIT(s[y-1])))))
 			s[x] = ' ';
 		else if(y > 4 && s[y] == '-' && isalpha(s[y-1]) &&

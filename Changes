@@ -1,5 +1,9 @@
 Revision history for Perl extension Text::ExtractWords.
 
+0.04  Fri May 23 12:00:27 WEST 2003
+	- In this version there was a bug fixed in "unescape_str"
+	  function.
+
 0.03  Thu May  8 10:58:03 WEST 2003
 	- This release fixes the bug in XS "str_scan" function.
 
