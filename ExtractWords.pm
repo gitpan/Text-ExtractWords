@@ -1,6 +1,6 @@
 #
 # ExtractWords.pm
-# Last Modification: Fri May 23 17:56:27 WEST 2003
+# Last Modification: Thu Sep 25 10:46:13 WEST 2003
 #
 # Copyright (c) 2003 Henrique Dias <hdias@aesbuc.pt>. All rights reserved.
 # This module is free software; you can redistribute it and/or modify
@@ -20,7 +20,7 @@ require AutoLoader;
 # names by default without a very good reason. Use EXPORT_OK instead.
 # Do not simply export all your public functions/methods/constants.
 @EXPORT = qw(&words_count &words_list);
-$VERSION = '0.05';
+$VERSION = '0.06';
 
 bootstrap Text::ExtractWords $VERSION;
 
@@ -41,10 +41,15 @@ Text::ExtractWords - Perl extension for extract words from strings
   use Text::ExtractWords qw(words_count words_list);
 
   my %hash = ();
-  words_count(\%hash, "test the words_count function");
+  my %config = (
+    minwordlen => 2,
+    maxwordlen => 32,
+    locale     => "pt_PT.ISO_8859-1",
+  );
+  words_count(\%hash, "test the words_count function", \%config);
 
   my @list = ();
-  words_list(\@list, "test the words_list function");
+  words_list(\@list, "test the words_list function", \%config);
 
 =head1 DESCRIPTION
 
@@ -53,12 +58,12 @@ identify spam. But it can be used for another purpose.
 
 =head1 METHODS
 
-=head2 words_count(HASHREF, STRING)
+=head2 words_count(HASHREF, STRING, HASHREF)
 
 Extract words from a string to hash reference and count the number of
 occurrences for each word.
 
-=head2 words_list(ARRAYREF, STRING)
+=head2 words_list(ARRAYREF, STRING, HASHREF)
 
 Extract words from a string to array reference.
 

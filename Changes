@@ -1,5 +1,9 @@
 Revision history for Perl extension Text::ExtractWords.
 
+0.06  Thu Sep 25 10:46:33 WEST 2003
+	- The module has been rewritten
+	- Optional hash variable to customize was added
+
 0.05  Fri May 23 18:07:03 WEST 2003
 	- "t" directory has been added with test scripts.
 
