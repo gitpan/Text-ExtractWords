@@ -1,5 +1,8 @@
 Revision history for Perl extension Text::ExtractWords.
 
+0.05  Fri May 23 18:07:03 WEST 2003
+	- "t" directory has been added with test scripts.
+
 0.04  Fri May 23 12:00:27 WEST 2003
 	- In this version there was a bug fixed in "unescape_str"
 	  function.
