@@ -1,6 +1,6 @@
 /*
  * ExtractWords.xs
- * Last Modification: Wed May  7 11:15:17 WEST 2003
+ * Last Modification: Thu May  8 10:50:56 WEST 2003
  *
  * Copyright (c) 2003 Henrique Dias <hdias@aesbuc.pt>. All rights reserved.
  * This module is free software; you can redistribute it and/or modify
@@ -83,7 +83,7 @@ unsigned char *str_scan(unsigned char *t, unsigned char *s, unsigned long *slen)
 				*(s+1) != 'a' && *(s+1) != 'A' && isalpha(*(s+1))) {
 			unsigned int i = 2;
 			while(*(s+i) && isalpha(*(s+i))) i++;
-			*t = (*(s+i) != '.') ? 'a' : *s;
+			*t = (*(s+i) == '.' && isalpha(*(s+i+1))) ? *s : 'a';
 		} else if(*s == '$' &&
 				*(s-1) != 's' && *(s-1) != 'S' && isalpha(*(s-1)) &&
 				*(s+1) != 's' && *(s+1) != 'S' && isalpha(*(s+1))) {

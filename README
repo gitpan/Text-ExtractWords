@@ -1,4 +1,4 @@
-This is the README file for the PERL module Text::ExtractWords for Version 0.02
+This is the README file for the PERL module Text::ExtractWords for Version 0.03
 
 Text::ExtractWords - Perl extension for extract words from strings
 
@@ -12,6 +12,7 @@ To install Text::ExtractWords module type the following:
 
 You can access the Text::ExtractWords documentation with
 perldoc Text::ExtractWords
+For examples look at examples directory.
 
 Questions, bug reports, useful code bits, and suggestions for
 Text::ExtractWords hould just be sent to me at hdias@aesbuc.pt

@@ -1,5 +1,8 @@
 Revision history for Perl extension Text::ExtractWords.
 
+0.03  Thu May  8 10:58:03 WEST 2003
+	- This release fixes the bug in XS "str_scan" function.
+
 0.02  Wed May  7 11:21:39 WEST 2003
 	- The documentation was added.
 	- The function str_to_lower was removed from XS.
