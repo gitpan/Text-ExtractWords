@@ -1,6 +1,6 @@
 #
 # ExtractWords.pm
-# Last Modification: Thu Sep 25 10:46:13 WEST 2003
+# Last Modification: Fri Sep 26 11:26:39 WEST 2003
 #
 # Copyright (c) 2003 Henrique Dias <hdias@aesbuc.pt>. All rights reserved.
 # This module is free software; you can redistribute it and/or modify
@@ -20,7 +20,7 @@ require AutoLoader;
 # names by default without a very good reason. Use EXPORT_OK instead.
 # Do not simply export all your public functions/methods/constants.
 @EXPORT = qw(&words_count &words_list);
-$VERSION = '0.06';
+$VERSION = '0.07';
 
 bootstrap Text::ExtractWords $VERSION;
 

@@ -1,6 +1,6 @@
 /*
  * ExtractWords.xs
- * Last Modification: Thu Sep 25 10:45:51 WEST 2003
+ * Last Modification: Fri Sep 26 11:28:01 WEST 2003
  *
  * Copyright (c) 2003 Henrique Dias <hdias@aesbuc.pt>. All rights reserved.
  * This module is free software; you can redistribute it and/or modify
@@ -23,9 +23,10 @@
 #define MINLENWORD	1
 #define MAXLENWORD	32
 #define MINLENMULTIWORD	6
+#define MINSPACELETTERS	2
 
-char delimiters[] = "\xAB\xBB !?,;:|\\/@\t\b\f\n\r&=\"()<>{}[]+*~^`";
-char chrsep[] = " _#.*-&";
+char delimiters[] = "\xAB\xB4\xBB !?,;:|\\/@\t\b\f\n\r&=\"()<>{}[]+*~^`";
+char chrsep[] = " _#.*-&/";
 
 struct def_entity {
 	unsigned char entity[9];
@@ -93,6 +94,13 @@ void str2lower(unsigned char *s) {
 void clean_repeated_chars(unsigned char *s) {
 	unsigned char *p = s;
 	while(*s) {
+		if(*s == '#' && isxdigit(*(s+1))) {
+			while(*s == '#' || isxdigit(*s)) {
+				*p = *s;
+				s++;
+				p++;
+			}
+		}
 		if(isalpha(*s) && *s == *(s+1) && *s == *(s+2))
 			while(*s == *(s+1)) s++;
 		*p = *s;
@@ -120,6 +128,32 @@ bool check_extension(unsigned char *s) {
 		extension(s, "php",  3) ? TRUE : FALSE);
 }
 
+
+bool space_words(unsigned char *s, unsigned char c) {
+	unsigned char *p = s;
+	int space = 1;
+	int letter = 0;
+	p++;
+	while(*p) {
+		if(*p == c) space++;
+		else if(isalpha(*p)) letter++;
+		else break;
+		p++;
+	}
+	return((space > MINSPACELETTERS && space == letter) ? TRUE : FALSE);
+}
+
+bool hex_dec(unsigned char *s) {
+	return((strchr(" \":", *(s-1)) &&
+		isxdigit(*(s+1)) &&
+		isxdigit(*(s+2)) &&
+		isxdigit(*(s+3)) &&
+		isxdigit(*(s+4)) &&
+		isxdigit(*(s+5)) &&
+		isxdigit(*(s+6)) &&
+		!isalnum(*(s+7))) ? TRUE : FALSE);
+}
+
 bool multiword(unsigned char *s) {
 	unsigned char *p = s;
 	int c = 0;
@@ -143,7 +177,7 @@ bool multiword(unsigned char *s) {
 void str_normalize(unsigned char *s) {
 	unsigned char *p = s;
 
-	while(*s && !isalnum(*s) && *s != '&') s++;
+	while(*s && !isalnum(*s) && *s != '&' && *s != '(') s++;
 	str2lower(s);
 	while(*s) {
 		if(*s == '&') {
@@ -152,43 +186,38 @@ void str_normalize(unsigned char *s) {
 				if(entity2char(&s, entities[i].entity, entities[i].length, entities[i].character))
 					break;
 		}
-		if(strchr(chrsep, *(s-2)) && isalpha(*(s-1)) &&
-				strchr(chrsep, *s) &&
-				isalpha(*(s+1)) &&
-				strchr(chrsep, *(s+2)) &&
-				isalpha(*(s+3)) &&
-				strchr(chrsep, *(s+4))) {
-			s++;
-			unsigned int i = 0;
-			while(*s) {
-				if(i == 0 && strchr(chrsep, *s)) {
-					s++;
-					i++;
-				} else if(isalpha(*s) && strchr(chrsep, *(s+1))) {
+		if(isalpha(*(s-1)) && strchr(chrsep, *s) && isalpha(*(s+1))) {
+			if(space_words(s, *s)) {
+				char c = *s;
+				while(*s) {
+					if(*s == c) s++;
+					else if(!isalpha(*s)) break;
 					*p = *s;
 					s++;
 					p++;
-					i = 0;
-				} else
-					break;
+				}
 			}
 		}
 		if((*s == '_' || *s == '-' || *s == '\'') && (!isalnum(*(s+1)) || !isalnum(*(s-1))))
 			*s = ' ';
-		else if(*s == '.') {
+		else if(*s == '0' && isalpha(*(s+1)) && isalpha(*(s-1)))
+			*s = 'o';
+		else if(*s == '(' && *(s+1) == ')' && isalpha(*(s+2)) && isalpha(*(s-1))) {
+			*(s+1) = 'o';
+			s++;
+		} else if(*s == '.') {
 			if(!((isdigit(*(s-1)) && isdigit(*(s+1))) || check_extension(s+1)))
 				*s = ' ';
 		} else if(*s == '-') {
 			if(multiword(s)) *s = ' ';
 		} else if(*s == '#') {
-			if(!(strchr(" \":", *(s-1)) &&
-					isxdigit(*(s+1)) &&
-					isxdigit(*(s+2)) &&
-					isxdigit(*(s+3)) &&
-					isxdigit(*(s+4)) &&
-					isxdigit(*(s+5)) &&
-					isxdigit(*(s+6)) &&
-					!isalnum(*(s+7))))
+			if(hex_dec(s)) {
+				while(*s == '#' || isxdigit(*s)) {
+					*p = *s;
+					s++;
+					p++;
+				}
+			} else
 				*s = ' ';
 		} else if(*s == '@' &&
 				*(s-1) != 'a' && *(s-1) != 'A' && isalpha(*(s-1)) &&
