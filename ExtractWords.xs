@@ -1,6 +1,6 @@
 /*
  * ExtractWords.xs
- * Last Modification: Fri Sep 26 11:28:01 WEST 2003
+ * Last Modification: Mon Oct 13 14:12:37 WEST 2003
  *
  * Copyright (c) 2003 Henrique Dias <hdias@aesbuc.pt>. All rights reserved.
  * This module is free software; you can redistribute it and/or modify
@@ -27,6 +27,7 @@
 
 char delimiters[] = "\xAB\xB4\xBB !?,;:|\\/@\t\b\f\n\r&=\"()<>{}[]+*~^`";
 char chrsep[] = " _#.*-&/";
+char chrend[] = " ,;.:\x0A\x0D\x09\"'?!+-*/()[]";
 
 struct def_entity {
 	unsigned char entity[9];
@@ -64,11 +65,16 @@ void unescape_str(unsigned char *s) {
 	for(x=0, y=0; s[y]; ++x, ++y) {
 		if((s[x] = s[y]) == '%') {
 			int hex;
-			if(isxdigit(s[y+1]) && isxdigit(s[y+2]) &&
+			if(isxdigit(s[y+1]) &&
+				isxdigit(s[y+2]) &&
 					sscanf(&s[y+1], "%02X", &hex)) {
 				s[x] = hex;
 				y+=2;
-			} else if(x == 0 || (x > 0 && !isDIGIT(s[x-1]))) s[x] = ' ';
+			} else if(x > 0 && isDIGIT(s[y-1]) && strchr(chrend, s[y+1])) {
+				int j = 2;
+				while(isDIGIT(s[x-j])) j++;
+				if(!strchr(chrend, s[x-j])) s[x] = ' ';
+			} else s[x] = ' ';
 		}
 	}
 	s[x] = '\0';
@@ -273,9 +279,9 @@ ew_words_list(aref, source, ...)
 			unsigned long ls;
 			if(ls = strlen(source)) {
 				AV *av = (AV *)SvRV(aref);
+				unescape_str(source);
 				str_normalize(source);
 				//fprintf(stdout, "-->%s<--\n", source);
-				unescape_str(source);
 				clean_repeated_chars(source);
 				for(t = strtok(source, delimiters); t != NULL; t = strtok(NULL, delimiters)) {
 					n = strlen(t);
@@ -326,9 +332,9 @@ ew_words_count(href, source, ...)
 			unsigned long ls;
 			if(ls = strlen(source)) {
 				HV *hv = (HV *)SvRV(href);
+				unescape_str(source);
 				str_normalize(source);
 				//fprintf(stdout, "-->%s<--\n", source);
-				unescape_str(source);
 				clean_repeated_chars(source);
 				for(t = strtok(source, delimiters); t != NULL; t = strtok(NULL, delimiters)) {
 					n = strlen(t);
