@@ -1,6 +1,8 @@
 Changes
 Makefile.PL
 MANIFEST
+README
 test.pl
+examples/extract.pl
 ExtractWords.pm
 ExtractWords.xs

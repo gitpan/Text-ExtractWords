@@ -1,6 +1,6 @@
 #
 # ExtractWords.xs
-# Last Modification: Wed Mar 19 12:10:26 WET 2003
+# Last Modification: Wed May  7 11:15:33 WEST 2003
 #
 # Copyright (c) 2003 Henrique Dias <hdias@aesbuc.pt>. All rights reserved.
 # This module is free software; you can redistribute it and/or modify
@@ -20,7 +20,7 @@ require AutoLoader;
 # names by default without a very good reason. Use EXPORT_OK instead.
 # Do not simply export all your public functions/methods/constants.
 @EXPORT = qw(&words_count &words_list);
-$VERSION = '0.01';
+$VERSION = '0.02';
 
 bootstrap Text::ExtractWords $VERSION;
 
@@ -34,25 +34,37 @@ __END__
 
 =head1 NAME
 
-Text::ExtractWords - Perl extension for blah blah blah
+Text::ExtractWords - Perl extension for extract words from strings
 
 =head1 SYNOPSIS
 
-  use Text::ExtractWords;
-  blah blah blah
+  use Text::ExtractWords qw(words_count words_list);
+
+  my %hash = ();
+  words_count(\%hash, "test the words_count function");
+
+  my @list = ();
+  words_list(\@list, "test the words_list function");
 
 =head1 DESCRIPTION
 
-Stub documentation for Text::ExtractWords was created by h2xs. It looks 
-like the
-author of the extension was negligent enough to leave the stub
-unedited.
+The aim of this module is to extract the words from the texts or mails to
+identify spam. But it can be used for another purpose.
 
-Blah blah blah.
+=head1 METHODS
+
+=head2 words_count(HASHREF, STRING)
+
+Extract words from a string to hash reference and count the number of
+occurrences for each word.
+
+=head2 words_list(ARRAYREF, STRING)
+
+Extract words from a string to array reference.
 
 =head1 AUTHOR
 
-Henrique Dias <hdias@esb.ucp.pt>
+Henrique Dias <hdias@aesbuc.pt>
 
 =head1 SEE ALSO
 

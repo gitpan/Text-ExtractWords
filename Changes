@@ -1,5 +1,11 @@
 Revision history for Perl extension Text::ExtractWords.
 
-0.01  Wed Mar 19 12:11:00 WET 2003
-	- original version; created by h2xs 1.19
+0.02  Wed May  7 11:21:39 WEST 2003
+	- The documentation was added.
+	- The function str_to_lower was removed from XS.
+	- The scan of words like cp@n or su$picion was was improved.
+	  Change words like cp@n to cpan but not cp@nx.org and words like
+	  su$picion to suspicion.
 
+0.01  Tue May  6 14:39:07 WEST 2003
+	- original version; created by h2xs 1.19
